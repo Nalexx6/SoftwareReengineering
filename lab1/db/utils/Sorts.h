@@ -5,7 +5,7 @@
 #ifndef LAB_1_DATA_BASE_IN_FILES__SORTS_H
 #define LAB_1_DATA_BASE_IN_FILES__SORTS_H
 
-#include "Product.h"
+#include "../models/Product.h"
 
 class Sorts {
 

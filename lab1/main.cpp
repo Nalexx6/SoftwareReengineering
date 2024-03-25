@@ -1,5 +1,5 @@
 
-#include "Mode.h"
+#include "cli/Mode.h"
 
 using namespace std;
 

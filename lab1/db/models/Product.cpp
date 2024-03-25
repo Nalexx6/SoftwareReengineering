@@ -32,7 +32,7 @@ int Product::id_1 = 0;
 
 void Product::define_id() {
 
-    ifstream f ("../Files/Products.txt");
+    ifstream f ("../files/Products.txt");
 
     f.seekg(-1, std::ios_base::end);
     bool keepLooping = true;

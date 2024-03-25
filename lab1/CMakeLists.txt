@@ -3,4 +3,4 @@ project(Lab_1_data_base_in_files_)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Lab_1_data_base_in_files_ main.cpp Product.cpp Product.h Functions.cpp Functions.h Mode.cpp Mode.h Sorts.cpp Sorts.h)
+add_executable(Lab_1_data_base_in_files_ main.cpp db/models/Product.cpp db/models/Product.h db/Functions.cpp db/Functions.h cli/Mode.cpp cli/Mode.h db/utils/Sorts.cpp db/utils/Sorts.h)

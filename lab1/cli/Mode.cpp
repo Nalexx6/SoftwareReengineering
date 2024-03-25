@@ -31,6 +31,7 @@ void Mode::interactive() {
                 "14 - sort products by any parameter in non-decreasing order\n";
 
         cin >> key;
+            // options_mapping[key]();
             if(key == 1){
                 function.create_new_product();
             }
@@ -154,7 +155,7 @@ void Mode::demo() {
      * - update certain(f&m) - print(x2) - search
      */
 
-     ifstream f("../Files/Demo default parameters.txt");
+     ifstream f("../files/Demo default parameters.txt");
      int N, del_1, del_2, idv_1,  quant_1, day_1, month_1, year_1, exp_per_1,
              idv_2,  quant_2, day_2, month_2, year_2, exp_per_2, search_b, search_t, search_d, search_m, search_y;
      string name_1, unit_1, name_2, unit_2, search_n, sort_key_1, sort_key_2;
@@ -324,7 +325,7 @@ void Mode::demo() {
 void Mode::benchmark() {
 
     Functions function;
-    ifstream f("../Files/Benchmark default parameters.txt");
+    ifstream f("../files/Benchmark default parameters.txt");
     string name, count_sort_key, radix_sort_key, sort_key_1, sort_key_2;
     char unit;
     int top, bottom, day, month, year;
@@ -333,7 +334,7 @@ void Mode::benchmark() {
     f.close();
     //N = 400000 is 10 seconds time
 
-    ofstream f_b("../Files/Benchmark data.txt");
+    ofstream f_b("../files/Benchmark data.txt");
 
     for(int N = 4; N <= 400000; N*=10) {
 
@@ -409,13 +410,13 @@ void Mode::benchmark() {
         end = clock();
         f_b << "Time for 1 iteration: "<< (end - start)<<" ms\n";
 
-        ifstream f_bin("../Files/Products_bin.txt");
+        ifstream f_bin("../files/Products_bin.txt");
         f_bin.seekg(0, ios::end);
         int size_b = f_bin.tellg();
         f_b<<"Size of binary file in bytes: "<< size_b<<" bytes\n";
         f_bin.close();
 
-        ifstream f_t("../Files/Products.txt");
+        ifstream f_t("../files/Products.txt");
         f_t.seekg(0, ios::end);
         int size_t = f_t.tellg();
         f_b<<"Size of txt file in bytes: "<< size_t<<" bytes\n\n";
@@ -423,7 +424,7 @@ void Mode::benchmark() {
 
     }
 
-    cout<<"\nResults of benchmark mode you can in file: ../Files/Benchmark data.txt\n";
+    cout<<"\nResults of benchmark mode you can in file: ../files/Benchmark data.txt\n";
     f_b.close();
 
 }

@@ -69,9 +69,9 @@ void Functions::create_new_product() {
 
 void Functions::save_all_products_from_memory_to_file(vector <Product> &vector1) {
 
-    ofstream f_w("../Files/Products.txt", ios::app);
-    ofstream f_b("../Files/Products_bin.txt", ios::binary | ios::app);
-    ifstream f_r("../Files/Products.txt");
+    ofstream f_w("../files/Products.txt", ios::app);
+    ofstream f_b("../files/Products_bin.txt", ios::binary | ios::app);
+    ifstream f_r("../files/Products.txt");
     string line;
     bool empty_file = true;
     if(getline(f_r, line))
@@ -99,7 +99,7 @@ void Functions::save_all_products_from_memory_to_file(vector <Product> &vector1)
 void Functions::print_all_data_from_file() {
 
     string line;
-    ifstream f("../Files/Products.txt");
+    ifstream f("../files/Products.txt");
     cout<<"id\tName\tUnit\tQuantity\tDate\tTime\tExpiry period\n";
     while (!f.eof()) {
 
@@ -130,7 +130,7 @@ void Functions::print_all_data_from_vector(vector <Product> &vector1) {
 
 void Functions::load_all_products_from_file(vector <Product> &vector1){
 
-    ifstream f("../Files/Products.txt");
+    ifstream f("../files/Products.txt");
     string name, unit;
     int i = 0, id, quant, day, month, year, hours, mins, secs, exp_per;
     if(f.is_open()) {
@@ -159,7 +159,7 @@ void Functions::load_all_products_from_file(vector <Product> &vector1){
 
 void Functions::load_all_products_from_binary_file(vector <Product> &vector1) {
 
-    ifstream f ("../Files/Products_bin.txt", ios::binary);
+    ifstream f ("../files/Products_bin.txt", ios::binary);
 
     string name, unit;
     char ch;
@@ -216,7 +216,7 @@ void Functions::load_all_products_from_binary_file(vector <Product> &vector1) {
 
 void Functions::print_all_data_from_binary_file() {
 
-    ifstream f ("../Files/Products_bin.txt", ios::binary);
+    ifstream f ("../files/Products_bin.txt", ios::binary);
 
     string name, unit;
     char ch;
@@ -323,10 +323,10 @@ void Functions::create_N_random_products_and_append_them_to_memory(int &N) {
 
 void Functions::delete_all_products_from_files() {
 
-    ofstream f_1( "../Files/Products_bin.txt", ofstream::trunc);
+    ofstream f_1( "../files/Products_bin.txt", ofstream::trunc);
     f_1.close();
 
-    ofstream f( "../Files/Products.txt", ofstream::trunc);
+    ofstream f( "../files/Products.txt", ofstream::trunc);
     f.close();
     for(auto & i : store){
 

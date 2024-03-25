@@ -5,10 +5,15 @@
 #ifndef LAB_1_DATA_BASE_IN_FILES__MODE_H
 #define LAB_1_DATA_BASE_IN_FILES__MODE_H
 
-#include "Functions.h"
+#include "../db/Functions.h"
 class Mode {
 
 private:
+//
+//    unordered_map <int, function<void()>> options_mapping = {
+//            {1, Functions::create_new_product},
+//            {2, Functions::save_all_products_from_memory_to_file},
+//    };
 
 public:
 

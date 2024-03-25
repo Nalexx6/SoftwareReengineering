@@ -5,9 +5,9 @@
 #ifndef LAB_1_DATA_BASE_IN_FILES__FUNCTIONS_H
 #define LAB_1_DATA_BASE_IN_FILES__FUNCTIONS_H
 
-#include "Product.h"
+#include "./models/Product.h"
 //3b Lab
-#include "Sorts.h"
+#include "utils/Sorts.h"
 
 class Functions {
 
