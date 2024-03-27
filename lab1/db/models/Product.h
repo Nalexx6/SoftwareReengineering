@@ -20,29 +20,53 @@ class Product {
 
 private:
 
+    int static product_counter;
 public:
-
+    static int getProductCounter();
     //Variables
 
     string Name;
     string Unit;
-    int Quantity;
-    int Day;
-    int Month;
-    int Year;
-    int Hours;
-    int Mins;
-    int Seconds;
-    int Expiry_period;
-    int Id;
-    bool Been_saved;
+    int Quantity{};
+    int Day{};
+    int Month{};
+    int Year{};
+    int Hours{};
+    int Mins{};
+    int Seconds{};
+    int Expiry_period{};
+    int Id{};
+    bool Been_saved{};
 
-    static int id_1;
+    const string &getName() const;
+    void setName(const string &name);
+    const string &getUnit() const;
+    void setUnit(const string &unit);
+    int getQuantity() const;
+    void setQuantity(int quantity);
+    int getDay() const;
+    void setDay(int day);
+    int getMonth() const;
+    void setMonth(int month);
+    int getYear() const;
+    void setYear(int year);
+    int getHours() const;
+    void setHours(int hours);
+    int getMins() const;
+    void setMins(int mins);
+    int getSeconds() const;
+    void setSeconds(int seconds);
+    int getExpiryPeriod() const;
+    void setExpiryPeriod(int expiryPeriod);
+    int getId() const;
+    void setId(int id);
+    bool isBeenSaved() const;
+    void setBeenSaved(bool beenSaved);
 
     Product (int Id, string &Name, string &Unit, int Quantity,
              int Day, int Month, int Year, int Hours, int Mins, int Seconds, int Expiry_period, bool Been_saved);
 
-    //Functions
+    //ProductsService
 
     static void define_id();
     void save_to_file(ofstream &f, bool empty);

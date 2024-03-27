@@ -1,11 +1,14 @@
 
 #include "cli/Mode.h"
+#include "db/service/ProductsService.h"
 
 using namespace std;
 
 
 int main() {
     char response = 'y';
+
+    Mode mode;
 
     while(response == 'y') {
         cout << "Please select the mode:\n"
@@ -16,13 +19,13 @@ int main() {
         cin >> key;
         switch (key) {
             case 0:
-                Mode::interactive();
+                mode.interactive();
                 break;
             case 1:
-                Mode::demo();
+                mode.demo();
                 break;
             case 2:
-                Mode::benchmark();
+                mode.benchmark();
                 break;
             default:
                 break;

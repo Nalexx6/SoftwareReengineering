@@ -4,17 +4,17 @@
 
 #include "Product.h"
 
-int Product::id_1 = 0;
+int Product::product_counter = 0;
 
- Product::Product(int Id, string &Name, string &Unit, int Quantity, int Day, int Month, int Year,
+Product::Product(int Id, string &Name, string &Unit, int Quantity, int Day, int Month, int Year,
          int Hours, int Mins, int Seconds, int Expiry_period, bool Been_saved) {
 
     if(Been_saved){
         this->Id = Id;
     }
     else {
-        this->Id = id_1;
-        Product::id_1++;
+        this->Id = product_counter;
+        Product::product_counter++;
     }
     this->Name = Name;
     this->Unit = Unit;
@@ -52,7 +52,7 @@ void Product::define_id() {
             f.seekg(-2, std::ios_base::cur);
 
     }
-    f >> id_1;
+    f >> product_counter;
 
     f.close();
 }
@@ -91,4 +91,104 @@ void Product::save_to_bin_file(ofstream &f) {
     f.write((char*)&this->Seconds, sizeof(this->Seconds));
     f.write((char*)&this->Expiry_period, sizeof(this->Expiry_period));
 
+}
+
+const string &Product::getName() const {
+    return Name;
+}
+
+void Product::setName(const string &name) {
+    Name = name;
+}
+
+const string &Product::getUnit() const {
+    return Unit;
+}
+
+void Product::setUnit(const string &unit) {
+    Unit = unit;
+}
+
+int Product::getQuantity() const {
+    return Quantity;
+}
+
+void Product::setQuantity(int quantity) {
+    Quantity = quantity;
+}
+
+int Product::getDay() const {
+    return Day;
+}
+
+void Product::setDay(int day) {
+    Day = day;
+}
+
+int Product::getMonth() const {
+    return Month;
+}
+
+void Product::setMonth(int month) {
+    Month = month;
+}
+
+int Product::getYear() const {
+    return Year;
+}
+
+void Product::setYear(int year) {
+    Year = year;
+}
+
+int Product::getHours() const {
+    return Hours;
+}
+
+void Product::setHours(int hours) {
+    Hours = hours;
+}
+
+int Product::getMins() const {
+    return Mins;
+}
+
+void Product::setMins(int mins) {
+    Mins = mins;
+}
+
+int Product::getSeconds() const {
+    return Seconds;
+}
+
+void Product::setSeconds(int seconds) {
+    Seconds = seconds;
+}
+
+int Product::getExpiryPeriod() const {
+    return Expiry_period;
+}
+
+void Product::setExpiryPeriod(int expiryPeriod) {
+    Expiry_period = expiryPeriod;
+}
+
+int Product::getId() const {
+    return Id;
+}
+
+void Product::setId(int id) {
+    Id = id;
+}
+
+bool Product::isBeenSaved() const {
+    return Been_saved;
+}
+
+void Product::setBeenSaved(bool beenSaved) {
+    Been_saved = beenSaved;
+}
+
+int Product::getProductCounter() {
+    return product_counter;
 }

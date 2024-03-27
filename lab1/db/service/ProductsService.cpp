@@ -2,73 +2,38 @@
 // Created by Win10Pro on 26.01.2020.
 //
 
-#include "Functions.h"
+#include "ProductsService.h"
 
 
-void Functions::create_new_product() {
+ProductsService::ProductsService() {
+    Product::define_id();
+}
 
-    cout << "Enter name\n";
-    string Name_1;
-    cin >> Name_1;
+vector<Product> ProductsService::getVector(const string &op){
 
-    cout << "Enter unit of measure (Press: k - kilos, l - litres , b - bunches,  p - pieces) \n";
-    string Unit_1;
-    char k;
-    cin>>k;
-    switch (k)  {
-        case 'k' : Unit_1 = "kilos";
-            break;
-        case 'l' : Unit_1 = "litres";
-            break;
-        case 'b' : Unit_1 = "bunches";
-            break;
-        case 'p' : Unit_1 = "pieces";
-            break;
-        default: Unit_1 = "unknown";
-    }
+    if (op == "store")
+        return store;
+    else if (op == "delete")
+        return for_delete_update;
+    else if (op == "update")
+        return for_delete_update;
+    else if (op == "search")
+        return searched_1;
+    else
+        return for_sort;
+}
 
-
-    cout << "Enter quantity\n";
-    int Quantity_1;
-    cin >> Quantity_1;
-
-    cout<< "Press 0 if you want to use default date(defined by ctime), or 1 if you want to enter your own date\n";
-    int key,Day, Month, Year, Hours, Mins, Seconds;
-    cin>>key;
-
-        time_t t;
-        time(&t);
-    tm *time = localtime(&t);
-    if( key == 0) {
-        Day = time->tm_mday;
-        Month = time->tm_mon + 1;
-        Year = time->tm_year + 1900;
-    }
-    else {
-        cout<<"Enter date: day (1-31), month(1-12), year(2020-2029)\n";
-        cin>>Day>>Month>>Year;
-    }
-
-    Hours = time->tm_hour;
-    Mins = time->tm_min;
-    Seconds = time->tm_sec;
-    cout << "Date of production is " << asctime(time);
-    cout << "Enter expiry period(days) \n";
-    int Expiry_period_1;
-    cin >> Expiry_period_1;
-
-
-    auto *product = new Product (Product::id_1, Name_1, Unit_1, Quantity_1,
-                                    Day, Month, Year, Hours, Mins, Seconds, Expiry_period_1, false);
+void ProductsService::create_new_product(Product *product) {
 
     store.push_back(*product);
     //ar_id[product->id_1]++;
 
-
 }
 
-void Functions::save_all_products_from_memory_to_file(vector <Product> &vector1) {
+void ProductsService::save_all_products_from_memory_to_file(const string& op) {
 
+    vector<Product> vector1 = getVector(op);
+    
     ofstream f_w("../files/Products.txt", ios::app);
     ofstream f_b("../files/Products_bin.txt", ios::binary | ios::app);
     ifstream f_r("../files/Products.txt");
@@ -80,7 +45,7 @@ void Functions::save_all_products_from_memory_to_file(vector <Product> &vector1)
     int k =0;
     for(auto & i : vector1){
 
-        if( !i.Been_saved) {
+        if( !i.isBeenSaved()) {
 
             i.save_to_file(f_w, empty_file);
             i.save_to_bin_file(f_b);
@@ -96,7 +61,7 @@ void Functions::save_all_products_from_memory_to_file(vector <Product> &vector1)
     f_b.close();
 }
 
-void Functions::print_all_data_from_file() {
+void ProductsService::print_all_data_from_file() {
 
     string line;
     ifstream f("../files/Products.txt");
@@ -112,7 +77,8 @@ void Functions::print_all_data_from_file() {
 
 }
 
-void Functions::print_all_data_from_vector(vector <Product> &vector1) {
+void ProductsService::print_all_data_from_vector(const string& op) {
+    vector<Product> vector1 = getVector(op);
 
     cout<<"idV\tid\tName\tUnit\tQuantity\tDate\tTime\tExpiry period\n";
 
@@ -128,14 +94,15 @@ void Functions::print_all_data_from_vector(vector <Product> &vector1) {
 
 }
 
-void Functions::load_all_products_from_file(vector <Product> &vector1){
+void ProductsService::load_all_products_from_file(const string& op){
+    vector<Product> vector1 = getVector(op);
 
     ifstream f("../files/Products.txt");
     string name, unit;
     int i = 0, id, quant, day, month, year, hours, mins, secs, exp_per;
     if(f.is_open()) {
 
-        while (!f.eof() && Product::id_1 > 0) {
+        while (!f.eof() && Product::getProductCounter() > 0) {
 
 
             f >> id >> name >> unit >> quant >> day >> month >> year >> hours >> mins >> secs >> exp_per;
@@ -157,7 +124,8 @@ void Functions::load_all_products_from_file(vector <Product> &vector1){
 
 }
 
-void Functions::load_all_products_from_binary_file(vector <Product> &vector1) {
+void ProductsService::load_all_products_from_binary_file(const string& op) {
+    vector<Product> vector1 = getVector(op);
 
     ifstream f ("../files/Products_bin.txt", ios::binary);
 
@@ -214,7 +182,7 @@ void Functions::load_all_products_from_binary_file(vector <Product> &vector1) {
 
 }
 
-void Functions::print_all_data_from_binary_file() {
+void ProductsService::print_all_data_from_binary_file() {
 
     ifstream f ("../files/Products_bin.txt", ios::binary);
 
@@ -264,7 +232,7 @@ void Functions::print_all_data_from_binary_file() {
 
 }
 
-void Functions::create_N_random_products_and_append_them_to_memory(int &N) {
+void ProductsService::create_N_random_products_and_append_them_to_memory(int &N) {
 
     int Id = 0;
 
@@ -285,15 +253,14 @@ void Functions::create_N_random_products_and_append_them_to_memory(int &N) {
         short key = rand() % 4;
         //cout<< key <<'\t';
         switch (key)  {
-            case 0 : Unit_1 = "kilos";
+            case 0 : Unit_1 = units_mapping['k'];
                     break;
-            case 1 : Unit_1 = "litres";
+            case 1 : Unit_1 = units_mapping['l'];
                     break;
-            case 2 : Unit_1 = "bunches";
+            case 2 : Unit_1 = units_mapping['b'];
                     break;
-            case 3 : Unit_1 = "pieces";
+            case 3 : Unit_1 = units_mapping['p'];
                     break;
-            default: Unit_1 = "unknown";
         }
 
         int Quantity = rand() % 51;
@@ -314,14 +281,16 @@ void Functions::create_N_random_products_and_append_them_to_memory(int &N) {
                 Day, Month, Year, Hours, Mins, Seconds, Exp_per, false);
 
         store.push_back(*product);
+        cout << store.size();
 
 
     }
     cout<<"\nAll " << N << " random products successfully created\n";
+    print_all_data_from_vector("store");
 
 }
 
-void Functions::delete_all_products_from_files() {
+void ProductsService::delete_all_products_from_files() {
 
     ofstream f_1( "../files/Products_bin.txt", ofstream::trunc);
     f_1.close();
@@ -330,69 +299,18 @@ void Functions::delete_all_products_from_files() {
     f.close();
     for(auto & i : store){
 
-        i.Been_saved = false;
+        i.setBeenSaved(false);
     }
 
 }
 
-void Functions::search_interactive() {
-
-    this->load_all_products_from_file(store);
-    this->print_all_data_from_vector(store);
-
-    for (const auto & i : store){
-
-        searched_1.push_back(i);
-    }
-    char response = 'y';
-    char key;
-
-    while(response == 'y') {
-
-        cout<< "Please choose parameter (n - name, q - quantity, d - date of production)\n";
-
-        cin>>key;
-        if(key == 'n') {
-            string name;
-            cout << "Please enter the filter - beginning of name of products wanted to be found\n";
-            cin >> name;
-            this->search_by_name(name);
-        }
-         if(key == 'q') {
-             char unit;
-             cout << "Please enter the first filter - unit of measure of products wanted to be found\n"
-                     "(k - kilos, l - litres, b - bunches, p - pieces)\n";
-             cin >> unit;
-             int top, bottom;
-             cout
-                     << "Please enter the second filter - bottom and upper bound of quantity of products wanted to be found\n";
-             cin >> bottom >> top;
-             this->search_by_quantity(unit, bottom, top);
-         }
-          if(key == 'd'){
-                int day, month, year;
-                cout<<"Please enter date: day (1-31), month(1-12), year(2020-2029)\n";
-                cin>>day>>month>>year;
-                this->search_by_date(day, month, year);
-          }
-
-        cout<<"Do you want to continue searching? (Press y to continue, or n to reset filters)\n";
-        char k;
-        cin>>k;
-        response = k;
-    }
-
-    searched_1.clear();
-
-}
-
-void Functions::search_by_name(string &name) {
+void ProductsService::search_by_name(string &name) {
 
     for(int j = 0; j < searched_1.size(); j++){
 
             for(int k = 0; k < name.size(); k++) {
 
-                if (searched_1[j].Name[k] != name[k]) {
+                if (searched_1[j].getName()[k] != name[k]) {
                     searched_1.erase(searched_1.begin() + j);
                     j--;
                     break;
@@ -404,26 +322,90 @@ void Functions::search_by_name(string &name) {
 
 
     cout<<"There are all products which names begin from: "<< name<< '\n';
-    print_all_data_from_vector(searched_1);
+    print_all_data_from_vector("search");
 
 }
 
-void Functions::search_by_quantity(char &unit, int &bottom, int &top) {
+void ProductsService::search_by_name_only(string &name) {
 
-    string filter;
-    switch (unit){
-        case 'k': filter = "kilos";
-            break;
-        case 'l': filter = "litres";
-            break;
-        case 'b': filter = "bunches";
-            break;
-        case 'p': filter = "pieces";
-            break;
-        default: filter = "unknown";
+    for(int j = 0; j < store.size(); j++){
+        int i = 0;
+        for(int k = 0; k < name.size(); k++) {
 
+            if (store[j].Name[k] != name[k]) {
+                i++;
+                break;
 
+            }
+        }
+        if(i == 0)
+            searched_1.push_back(store[j]);
     }
+
+    cout<<"Number of products which names begin from: "<< name<<" is: "<<searched_1.size()<<'\n';
+    searched_1.clear();
+
+}
+
+void ProductsService::search_by_quantity_only(char &unit, int &bottom, int &top) {
+    string filter = units_mapping[unit];
+
+    for(int i = 0; i < store.size(); i++){
+        int j = 0;
+        if(store[i].Unit[0] != filter[0] || store[i].Quantity > top || store[i].Quantity < bottom){
+
+            j++;
+
+        }
+        if(j == 0)
+            searched_1.push_back(store[i]);
+    }
+
+    cout<< "Number of products which have quantity: " << bottom << '-'<< top <<
+        " in unit of measure "<<unit<<" is: "<<searched_1.size()<<'\n' ;
+
+    searched_1.clear();
+
+}
+
+void ProductsService::search_by_date_only(int &day, int &month, int &year) {
+
+    for(int i = 0; i < store.size(); i++){
+        int j = 0;
+        if(store[i].Year > year){
+
+            j++;
+
+        }
+        else{
+            if(store[i].Year == year && store[i].Month > month){
+
+                j++;
+
+
+            } else{
+                if(store[i].Year == year && store[i].Month == month && store[i].Day > day){
+
+                    j++;
+
+
+                }
+            }
+        }
+        if(j == 0)
+            searched_1.push_back(store[i]);
+    }
+
+    cout<< "Number of products which have been done before: "
+        << day<<':'<<month<<':'<<year<<" is: "<< searched_1.size()<<'\n';
+
+    searched_1.clear();
+
+}
+
+
+void ProductsService::search_by_quantity(char &unit, int &bottom, int &top) {
+    string filter = units_mapping[unit];
 
     for(int i = 0; i < searched_1.size(); i++){
 
@@ -437,12 +419,12 @@ void Functions::search_by_quantity(char &unit, int &bottom, int &top) {
     }
 
     cout<< "There are all products which have quantity: " << bottom << '-'<< top << " in unit of measure"<<unit<<'\n';
-    print_all_data_from_vector(searched_1);
+    print_all_data_from_vector("search");
 
 
 }
 
-void Functions::search_by_date(int &day, int &month, int &year) {
+void ProductsService::search_by_date(int &day, int &month, int &year) {
 
     for(unsigned int i = 0; i < searched_1.size(); i++){
 
@@ -470,19 +452,24 @@ void Functions::search_by_date(int &day, int &month, int &year) {
     }
 
     cout<< "There are all products which have been done before: "<< day<<':'<<month<<':'<<year<<'\n';
-    print_all_data_from_vector(searched_1);
+    print_all_data_from_vector("search");
 
 
 }
 
-void Functions::delete_all_products_from_memory() {
+void ProductsService::clear_search_memory() {
+
+    this->searched_1.clear();
+}
+
+void ProductsService::delete_all_products_from_memory() {
 
     store.clear();
     cout<<"Memory is successfully cleared\n";
 
 }
 
-void Functions::delete_certain_product(char &source, int &idv) {
+void ProductsService::delete_certain_product(char &source, int &idv) {
 
     if(source == 'f') {
         store.erase(store.begin() + bin_search(store, for_delete_update[idv].Id));
@@ -498,8 +485,8 @@ void Functions::delete_certain_product(char &source, int &idv) {
 
 }
 
-void Functions::update_certain_product_from_memory(char &source, vector <Product> &vector1, int &idv) {
-
+void ProductsService::update_certain_product_from_memory(char &source, const string& op, int &idv) {
+    vector<Product> vector1 = getVector(op);
 
     char key_1;
     string new_par;
@@ -583,102 +570,24 @@ void Functions::update_certain_product_from_memory(char &source, vector <Product
     }
     cout << "Product successfully updated\n";
 
-
-
 }
 
-void Functions::update_certain_product(char &source, int &idv) {
+
+
+void ProductsService::update_certain_product(char &source, int &idv) {
 
     if(source == 'f')
-        this->update_certain_product_from_memory(source, for_delete_update, idv);
+        this->update_certain_product_from_memory(source,  "update", idv);
     if(source == 'm')
-        this->update_certain_product_from_memory(source, store, idv);
+        this->update_certain_product_from_memory(source, "store", idv);
 
 }
 
- int Functions::find_exact_pos_in_vector(vector <Product> &vector1, int &id) {
+void ProductsService::update_for_demo(char &source, int &idv, string &name, string &unit, int &quantity,
+                               int &day, int &month, int &year, int &exp_per) {
 
-    if(vector1.empty()){
-        return 0;
-    }
-    int a = 0, b = vector1.size() - 1;
-    int middle = 0;
-    while(a <= b){
-        middle = (a + b) / 2;
-        if(vector1[middle].Id == id)
-            return -1;
-        if(vector1[middle].Id < id) {
-            a = middle + 1;
-
-        } else{
-            b = middle - 1;
-
-        }
-
-    }
-    if(middle + 1 == vector1.size()){
-        return middle + 1;
-    }
-     return middle;
-
-
- }
-
-int Functions::bin_search(vector <Product> &vector1, int &id) {
-
-
-    if(vector1.empty()){
-        return -1;
-    }
-    int a = 0, b = vector1.size() - 1;
-    int middle = 0;
-    while(a <= b){
-        middle = (a + b) / 2;
-        if(vector1[middle].Id == id)
-            return middle;
-        if(vector1[middle].Id < id) {
-            a = middle + 1;
-
-        } else{
-            b = middle - 1;
-
-        }
-
-    }
-//    if(middle + 1 == vector1.size()){
-//        return middle + 1;
-//    }
-//    return middle;
-    return -1;
-}
-
-void Functions::search_for_demo(string &name, char &unit, int &bottom, int &top, int &day, int &month, int &year) {
-
-    load_all_products_from_file(store);
-    print_all_data_from_vector(store);
-
-    for (const auto & i : store){
-        searched_1.push_back(i);
-    }
-    string cont;
-    search_by_name(name);
-    cout<<"cin anything to continue\n";
-    cin>>cont;
-    search_by_quantity(unit, bottom, top);
-    cout<<"cin anything to continue\n";
-    cin>>cont;
-    search_by_date(day, month, year);
-    cout<<"cin anything to continue\n";
-    cin>>cont;
-
-    searched_1.clear();
-}
-
-void Functions::update_for_demo(char &source, int &idv, string &name, string &unit, int &quantity,
-                                int &day, int &month, int &year, int &exp_per) {
-
-    load_all_products_from_file(for_delete_update);
-    print_all_data_from_vector(store);
+    load_all_products_from_file("update");
+    print_all_data_from_vector("delete");
     int idv_1;
     if(source == 'm'){
         store[idv].Name = name;
@@ -718,99 +627,72 @@ void Functions::update_for_demo(char &source, int &idv, string &name, string &un
     }
     cout << "Product successfully updated\n";
 
-
-
 }
 
-void Functions::search_by_name_for_bm(string &name) {
+void ProductsService::save_changes_to_files() {
 
-    for(int j = 0; j < store.size(); j++){
-        int i = 0;
-        for(int k = 0; k < name.size(); k++) {
-
-            if (store[j].Name[k] != name[k]) {
-                i++;
-                break;
-
-            }
-        }
-    if(i == 0)
-        searched_1.push_back(store[j]);
+    delete_all_products_from_files();
+    for (auto & i : for_delete_update) {
+        i.Been_saved = false;
     }
-
-
-    cout<<"Number of products which names begin from: "<< name<<" is: "<<searched_1.size()<<'\n';
-
+    save_all_products_from_memory_to_file("delete");
+    for_delete_update.clear();
 }
 
-void Functions::search_by_quantity_for_bm(char &unit, int &bottom, int &top) {
 
-    string filter;
-    switch (unit){
-        case 'k': filter = "kilos";
-            break;
-        case 'l': filter = "litres";
-            break;
-        case 'b': filter = "bunches";
-            break;
-        case 'p': filter = "pieces";
-            break;
-        default: filter = "unknown";
+ int ProductsService::find_exact_pos_in_vector(vector <Product> &vector1, int &id) {
 
-
+    if(vector1.empty()){
+        return 0;
     }
+    int a = 0, b = vector1.size() - 1;
+    int middle = 0;
+    while(a <= b){
+        middle = (a + b) / 2;
+        if(vector1[middle].Id == id)
+            return -1;
+        if(vector1[middle].Id < id) {
+            a = middle + 1;
 
-    for(int i = 0; i < store.size(); i++){
-        int j = 0;
-        if(store[i].Unit[0] != filter[0] || store[i].Quantity > top || store[i].Quantity < bottom){
-
-            j++;
+        } else{
+            b = middle - 1;
 
         }
-        if(j == 0)
-            searched_1.push_back(store[i]);
+
     }
+    if(middle + 1 == vector1.size()){
+        return middle + 1;
+    }
+     return middle;
 
-    cout<< "Number of products which have quantity: " << bottom << '-'<< top <<
-    " in unit of measure "<<unit<<" is: "<<searched_1.size()<<'\n' ;
+
+ }
+
+int ProductsService::bin_search(vector <Product> &vector1, int &id) {
 
 
+    if(vector1.empty()){
+        return -1;
+    }
+    int a = 0, b = vector1.size() - 1;
+    int middle = 0;
+    while(a <= b){
+        middle = (a + b) / 2;
+        if(vector1[middle].Id == id)
+            return middle;
+        if(vector1[middle].Id < id) {
+            a = middle + 1;
+
+        } else{
+            b = middle - 1;
+
+        }
+
+    }
+    return -1;
 }
 
-void Functions::search_by_date_for_bm(int &day, int &month, int &year) {
-
-    for(int i = 0; i < store.size(); i++){
-        int j = 0;
-        if(store[i].Year > year){
-
-            j++;
-
-        }
-        else{
-            if(store[i].Year == year && store[i].Month > month){
-
-                j++;
-
-
-            } else{
-                if(store[i].Year == year && store[i].Month == month && store[i].Day > day){
-
-                    j++;
-
-
-                }
-            }
-        }
-        if(j == 0)
-            searched_1.push_back(store[i]);
-    }
-
-    cout<< "Number of products which have been done before: "
-        << day<<':'<<month<<':'<<year<<" is: "<< searched_1.size()<<'\n';
-
-}
-
-void Functions::sort_interactive() {
+void ProductsService::sort_interactive() {
 
 
     string combination;
@@ -825,7 +707,7 @@ void Functions::sort_interactive() {
         cin >> combination;
         Sorts::sort_by_any_par(combination, for_sort, 0, for_sort.size() - 1);
         cout<<"This is result of sorting\n";
-        print_all_data_from_vector(for_sort);
+        print_all_data_from_vector("sort");
         cout<<"If you want to sort by another key, press 'y', press 'n' if you don`t\n";
         cin>>response;
     }
@@ -833,32 +715,32 @@ void Functions::sort_interactive() {
 
 }
 
-void Functions::sort_demo(string &key_1 , string& key_2) {
+void ProductsService::sort_demo(string &key_1 , string& key_2) {
 
     string breakpoint;
     for (const auto &i : store) {
         for_sort.push_back(i);
     }
     cout<<"Now we will sort our elements by key: "<<key_1<<"\n"
-                "cin any to continue\n";
+                                                           "cin any to continue\n";
     cin>>breakpoint;
     Sorts::sort_by_any_par(key_1, for_sort, 0, for_sort.size() - 1);
-    print_all_data_from_vector(for_sort);
+    print_all_data_from_vector("sort");
     cout<<"As we can see our memory is sorted by our key\n"
-         "cin any to continue\n";
+          "cin any to continue\n";
     cin>>breakpoint;
     cout<<"Now we will sort our elements by combination of keys: "<<key_2<<"\n"
-            "cin any to continue\n";
+                                                                           "cin any to continue\n";
     cin>>breakpoint;
     Sorts::sort_by_any_par(key_2, for_sort, 0, for_sort.size() - 1);
-    print_all_data_from_vector(for_sort);
+    print_all_data_from_vector("sort");
     cout<<"As we can see our memory is sorted by our combination\n"
           "cin any to continue\n";
     cin>>breakpoint;
 
 }
 
-clock_t Functions::sort_benchmark(string &key) {
+clock_t ProductsService::sort_benchmark(string &key) {
 
     for(int i = 0; i < store.size(); i++){
         for_sort.push_back(store[i]);
@@ -870,11 +752,6 @@ clock_t Functions::sort_benchmark(string &key) {
     cout<<"Memory was sorted by key: "<<key<<"\n";
     return end - start;
 }
-
-
-
-
-
 
 
 
