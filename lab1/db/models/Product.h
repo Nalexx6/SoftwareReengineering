@@ -21,9 +21,6 @@ class Product {
 private:
 
     int static product_counter;
-public:
-    static int getProductCounter();
-    //Variables
 
     string Name;
     string Unit;
@@ -37,6 +34,11 @@ public:
     int Expiry_period{};
     int Id{};
     bool Been_saved{};
+public:
+    static int getProductCounter();
+    //Variables
+
+
 
     const string &getName() const;
     void setName(const string &name);

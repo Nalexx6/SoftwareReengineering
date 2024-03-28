@@ -248,19 +248,19 @@ void Commands::benchmark() {
         f_b << "Loading all products from binary file: "<< (end_1 - start_1)<<" ms\n";
 
         start_1 = clock();
-        Commands::search_by_name_for_bm(name);
+        Commands::productsService.search_by_name_only(name);
         end_1 = clock();
         Commands::productsService.clear_search_memory();
         f_b << "Searching by name: "<< (end_1 - start_1)<<" ms\n";
 
         start_1 = clock();
-        Commands::search_by_quantity_for_bm(unit, bottom, top);
+        Commands::productsService.search_by_quantity_only(unit, bottom, top);
         end_1 = clock();
         Commands::productsService.clear_search_memory();
         f_b << "Searching by unit and quantity: "<< (end_1 - start_1)<<" ms\n";
 
         start_1 = clock();
-        Commands::search_by_date_for_bm(day, month, year);
+        Commands::productsService.search_by_date_only(day, month, year);
         end_1 = clock();
         Commands::productsService.clear_search_memory();
         f_b << "Searching by date of production: "<< (end_1 - start_1)<<" ms\n";

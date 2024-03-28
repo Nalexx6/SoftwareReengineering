@@ -34,8 +34,9 @@ public:
 
     ProductsService();
 
-
-
+    vector<Product> get_store_copy(){
+        return store;
+    }
     void create_new_product(Product *product);
     void save_all_products_from_memory_to_file(const string& op);
     void print_all_data_from_file();
@@ -49,16 +50,17 @@ public:
     void delete_all_products_from_memory();
     void delete_certain_product(char &source, int &idV);
 
-    void update_certain_product_from_memory(char &source, const string& op, int &idv);
-    void update_certain_product(char &source, int &idv);
-    void update_for_demo(char &source, int &idv, string &name, string &unit, int &quantity,
-                                int &day, int &month, int &year, int &exp_per);
+    void update_certain_product(char &source, int &idv, const Product &product);
+    Product select_product_for_update(const char &source, const int &idV);
 
     void save_changes_to_files();
 
     void search_by_name(string &name);
     void search_by_quantity(char &unit, int &bottom, int &top);
     void search_by_date(int &day, int &month, int &year);
+    void prepare_search_memory() {
+        for_sort = store;
+    }
     void clear_search_memory();
 
     //faster search, which does not consider multiple filters. Used for benchmark is not user-friendly
@@ -66,10 +68,11 @@ public:
     void search_by_quantity_only(char &unit, int &bottom, int &top);
     void search_by_date_only(int &day, int &month, int &year);
 
-    int find_exact_pos_in_vector(vector <Product> &vector1, int &id);
-    int bin_search(vector <Product> &vector1, int &id);
+    static int find_exact_pos_in_vector(vector <Product> &vector1, int &id);
+    static int bin_search(vector <Product> &vector1, const int &id);
 
-    void sort_interactive();
+
+    void sort_by_combination(const string &combination);
     void sort_demo(string& key_1, string& key_2);
     clock_t sort_benchmark(string& key);
 

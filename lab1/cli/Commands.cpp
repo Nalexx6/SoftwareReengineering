@@ -154,7 +154,9 @@ void Commands::update_certain_product() {
         cout << "Please enter the idV of product which you want to update\n";
         int id_1;
         cin >> id_1;
-        productsService.update_certain_product(ch, id_1);
+        Product product = productsService.select_product_for_update(ch, id_1);
+
+        productsService.update_certain_product(ch, id_1, update_selected_product(product));
         cout << "Press y if you want to update another element, or n if you don`t\n";
         char k;
         cin >> k;
@@ -164,11 +166,83 @@ void Commands::update_certain_product() {
     productsService.save_changes_to_files();
 }
 
+Product Commands::update_selected_product(Product &product) {
+    char key_1;
+    string new_par;
+    int new_p, day, month, year;
+    cout << "Please enter parameter which you want to update:\n"
+            "n - name, u - unit, q - quantity, d - date, e - expiry period\n";
+    cin >> key_1;
+
+    switch (key_1) {
+        case 'n' :
+            cout << "Enter new name:\n";
+            cin >> new_par;
+            product.setName(new_par);
+            break;
+        case 'u' :
+            cout << "Enter new unit of measure "
+                    "(Press: k - kilos, l - litres , b - bunches,  p - pieces) \n";
+            char k;
+            cin >> k;
+            switch (k) {
+                case 'k' :
+                    new_par = "kilos";
+                    break;
+                case 'l' :
+                    new_par = "litres";
+                    break;
+                case 'b' :
+                    new_par = "bunches";
+                    break;
+                case 'p' :
+                    new_par = "pieces";
+                    break;
+                default: new_par = "unknown";
+
+            }
+            product.setUnit(new_par);
+            break;
+        case 'q' :
+            cout << "Enter new quantity\n";
+            cin >> new_p;
+            product.setQuantity(new_p);
+            break;
+        case 'd' :
+            cout << "Enter date: day (1-31), month(1-12), year(2020-2029)\n";
+            cin >> day >> month >> year;
+            product.setDay(day);
+            product.setMonth(month);
+            product.setYear(year);
+            break;
+        case 'e' :
+            cout << "Enter new expiry period(days)\n";
+            cin >> new_p;
+            product.setExpiryPeriod(new_p);
+            break;
+        default:
+            break;
+    }
+
+    return product;
+}
+
 void Commands::update_for_demo(char &source, int &idv, string &name, string &unit, int &quantity,
                                       int &day, int &month, int &year, int &exp_per) {
 
-    productsService.update_for_demo(source, idv, name, unit, quantity,
-                    day, month, year, exp_per);
+    productsService.load_all_products_from_file("update");
+    productsService.print_all_data_from_vector("update");
+    Product product = productsService.select_product_for_update(source, idv);
+    
+    product.setName(name);
+    product.setUnit(unit);
+    product.setQuantity(quantity);
+    product.setDay(day);
+    product.setMonth(month);
+    product.setYear(year);
+    product.setExpiryPeriod(exp_per);
+
+    productsService.update_certain_product(source, idv, product);
 }
 
 void Commands::search_interactive() {
@@ -238,28 +312,55 @@ void Commands::search_for_demo(string &name, char &unit, int &bottom, int &top, 
     productsService.clear_search_memory();
 }
 
-
-void Commands::search_by_name_for_bm(string &name) {
-    productsService.search_by_name_only(name);
-}
-
-void Commands::search_by_quantity_for_bm(char &unit, int &bottom, int &top) {
-    productsService.search_by_quantity_only(unit, bottom, top);
-}
-
-void Commands::search_by_date_for_bm(int &day, int &month, int &year) {
-    productsService.search_by_date_only(day, month, year);
-}
-
 void Commands::sort_interactive() {
-    productsService.sort_interactive();
+    string combination;
+    productsService.prepare_search_memory();
+
+    char response = 'y';
+    while (response == 'y') {
+        cout << "Please enter the combination of parameters by which you want to sort\n"
+                "(enter your parameters without SPACE, and when you finish press ENTER)\n"
+                "keys: n - name, u - unit, q - quantity, d - date, e - expiry period\n";
+        cin >> combination;
+        productsService.sort_by_combination(combination);
+        cout<<"This is result of sorting\n";
+        productsService.print_all_data_from_vector("sort");
+        cout<<"If you want to sort by another key, press 'y', press 'n' if you don`t\n";
+        cin>>response;
+    }
+    productsService.clear_search_memory();
 }
 
 void Commands::sort_demo(string &key_1 , string& key_2) {
-    productsService.sort_demo(key_1, key_2);
+    string breakpoint;
+    productsService.prepare_search_memory();
 
+    cout<<"Now we will sort our elements by key: "<<key_1<<"\n"
+                                                           "cin any to continue\n";
+    cin>>breakpoint;
+    productsService.sort_by_combination(key_1);
+    productsService.print_all_data_from_vector("sort");
+    cout<<"As we can see our memory is sorted by our key\n"
+          "cin any to continue\n";
+    cin>>breakpoint;
+    cout<<"Now we will sort our elements by combination of keys: "<<key_2<<"\n"
+                                                                           "cin any to continue\n";
+    cin>>breakpoint;
+    productsService.sort_by_combination(key_2);
+    productsService.print_all_data_from_vector("sort");
+    cout<<"As we can see our memory is sorted by our combination\n"
+          "cin any to continue\n";
+    cin>>breakpoint;
+
+    productsService.clear_search_memory();
 }
 
 clock_t Commands::sort_benchmark(string &key) {
-    return productsService.sort_benchmark(key);
+    productsService.prepare_search_memory();
+    clock_t start = clock();
+    productsService.sort_by_combination(key);
+    clock_t end = clock();
+    productsService.clear_search_memory();
+    cout<<"Memory was sorted by key: "<<key<<"\n";
+    return end - start;
 }

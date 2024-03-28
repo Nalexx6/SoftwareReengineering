@@ -48,7 +48,7 @@ private:
     void static delete_all_products_from_memory();
     void static delete_certain_product();
     void static update_certain_product();
-    void static generate_update_properties(char &source, int &idv);
+    Product static update_selected_product(Product &product);
 
     //interactive
     void static search_interactive();
@@ -57,11 +57,6 @@ private:
     void static search_for_demo(string &name, char &unit, int &bottom, int &top, int &day, int &month, int &year);
     void static update_for_demo(char &source, int &idv, string &name, string &unit, int &quantity,
                          int &day, int &month, int &year, int &exp_per);
-
-    //benchmark
-    void static search_by_name_for_bm(string &name);
-    void static search_by_quantity_for_bm(char &unit, int &bottom, int &top);
-    void static search_by_date_for_bm(int &day, int &month, int &year);
 
     //additional functionality with sorting in-memory data
     void static sort_interactive();
