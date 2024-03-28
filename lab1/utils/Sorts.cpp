@@ -6,7 +6,7 @@
 
 int Sorts::limit = 10;
 
-int Sorts::compare_string(string& a, string& b) {
+int Sorts::compare_string(const string& a, const string& b) {
     int temp_a;
     int temp_b;
     for(int i = 0; i < min(a.length(), b.length()); i++){
@@ -31,7 +31,7 @@ int Sorts::compare_string(string& a, string& b) {
         return -1;
 }
 
-int Sorts::compare_int(int &a, int &b) {
+int Sorts::compare_int(const int &a, const int &b) {
     if(a > b)
         return 1;
     if(a < b)
@@ -39,42 +39,42 @@ int Sorts::compare_int(int &a, int &b) {
     return 0;
 }
 
-int Sorts::compare_date(Product& a, Product& b) {
+int Sorts::compare_date(const Product& a, const Product& b) {
 
-    if(a.Year > b.Year)
+    if(a.getYear() > b.getYear())
         return 1;
-    if(a.Year < b.Year)
+    if(a.getYear() < b.getYear())
         return -1;
-    if(a.Month > b.Month)
+    if(a.getMonth() > b.getMonth())
         return 1;
-    if(a.Month < b.Month)
+    if(a.getMonth() < b.getMonth())
         return -1;
-    if(a.Day > b.Day)
+    if(a.getDay() > b.getDay())
         return 1;
-    if(a.Day < b.Day)
+    if(a.getDay() < b.getDay())
         return -1;
     return 0;
 
 }
 
-int Sorts::compare_product(Product &a, Product &b, string& key) {
+int Sorts::compare_product(const Product &a, const Product &b, const string& key) {
 
     for(int i = 0; i < key.length(); i++) {
         if (key[i] == 'n') {
-            if (compare_string(a.Name, b.Name) != 0 || i == key.length() - 1)
-                return compare_string(a.Name, b.Name);
+            if (compare_string(a.getName(), b.getName()) != 0 || i == key.length() - 1)
+                return compare_string(a.getName(), b.getName());
         } else if (key[i] == 'u') {
-            if(compare_string(a.Unit, b.Unit) != 0 || i == key.length() - 1)
-                return compare_string(a.Unit, b.Unit);
+            if(compare_string(a.getUnit(), b.getUnit()) != 0 || i == key.length() - 1)
+                return compare_string(a.getUnit(), b.getUnit());
         } else if (key[i] == 'q') {
-            if(compare_int(a.Quantity, b.Quantity) != 0 || i == key.length() - 1)
-                return compare_int(a.Quantity, b.Quantity);
+            if(compare_int(a.getQuantity(), b.getQuantity()) != 0 || i == key.length() - 1)
+                return compare_int(a.getQuantity(), b.getQuantity());
         } else if (key[i] == 'd') {
             if(compare_date(a, b) != 0 || i == key.length() - 1)
                 return compare_date(a, b);
         } else if (key[i] == 'e') {
-            if(compare_int(a.Expiry_period, b.Expiry_period) != 0 || i == key.length() - 1)
-                return compare_int(a.Expiry_period, b.Expiry_period);
+            if(compare_int(a.getExpiryPeriod(), b.getExpiryPeriod()) != 0 || i == key.length() - 1)
+                return compare_int(a.getExpiryPeriod(), b.getExpiryPeriod());
         }
     }
     return 0;
@@ -85,13 +85,13 @@ void Sorts::counting_sort_for_unit(vector<Product> &vector1) {
 
     int count[4] = {0};
     for(auto & i : vector1){
-        if(i.Unit == "bunches")
+        if(i.getUnit() == "bunches")
             count[0]++;
-        if(i.Unit == "kilos")
+        if(i.getUnit() == "kilos")
             count[1]++;
-        if(i.Unit == "litres")
+        if(i.getUnit() == "litres")
             count[2]++;
-        if(i.Unit == "pieces")
+        if(i.getUnit() == "pieces")
             count[3]++;
     }
     vector <Product> vector2;
@@ -100,19 +100,19 @@ void Sorts::counting_sort_for_unit(vector<Product> &vector1) {
     }
     int pos[4] = {0, count[0], count[0] + count[1], count[0] + count[1] + count[2]};
     for(auto & i : vector2){
-        if(i.Unit == "bunches"){
+        if(i.getUnit() == "bunches"){
             vector1[pos[0]] = i;
             pos[0]++;
         }
-        if(i.Unit == "kilos"){
+        if(i.getUnit() == "kilos"){
             vector1[pos[1]] = i;
             pos[1]++;
         }
-        if(i.Unit == "litres"){
+        if(i.getUnit() == "litres"){
             vector1[pos[2]] = i;
             pos[2]++;
         }
-        if(i.Unit == "pieces"){
+        if(i.getUnit() == "pieces"){
             vector1[pos[3]] = i;
             pos[3]++;
         }
@@ -128,7 +128,7 @@ void Sorts::radix_sort_for_exp_per(vector<Product> &vector1) {
             count[i].clear();
         }
         for (int i = 0; i < vector1.size(); i++) {
-            count[(vector1[i].Expiry_period / base) % 10].push_back(vector1[i]);
+            count[(vector1[i].getExpiryPeriod() / base) % 10].push_back(vector1[i]);
         }
         vector1.clear();
         for(int j = 0; j < 10; j++){
@@ -142,7 +142,7 @@ void Sorts::radix_sort_for_exp_per(vector<Product> &vector1) {
 
 }
 
-void Sorts::insertion_sort(vector<Product> &vector1, int lo, int hi, string &key) {
+void Sorts::insertion_sort(vector<Product> &vector1, int lo, int hi, const string &key) {
 
     for (int i = lo; i < hi + 1; i++) {
         Product temp = vector1[i];
@@ -155,7 +155,7 @@ void Sorts::insertion_sort(vector<Product> &vector1, int lo, int hi, string &key
 
 }
 
-void Sorts::merge(vector<Product> &vector1, vector<Product> &for_merge, int lo, int mid, int hi, string &key) {
+void Sorts::merge(vector<Product> &vector1, vector<Product> &for_merge, int lo, int mid, int hi, const string &key) {
 
     for(int i = lo; i <= hi; i++){
         for_merge[i] = vector1[i];
@@ -180,7 +180,7 @@ void Sorts::merge(vector<Product> &vector1, vector<Product> &for_merge, int lo, 
 
 }
 
-void Sorts::sort(vector<Product> &vector1, vector<Product> &for_merge, int lo, int hi, string &key) {
+void Sorts::sort(vector<Product> &vector1, vector<Product> &for_merge, int lo, int hi, const string &key) {
 
     if(hi <= lo + limit - 1) {
 
@@ -194,7 +194,7 @@ void Sorts::sort(vector<Product> &vector1, vector<Product> &for_merge, int lo, i
 
 }
 
-void Sorts::smart_merge_sort_for_memory(vector<Product> &vector1, int lo, int hi, string &key) {
+void Sorts::smart_merge_sort_for_memory(vector<Product> &vector1, int lo, int hi, const string &key) {
 
     vector <Product> for_merge = vector1;
     sort(vector1, for_merge, lo, hi, key);
@@ -202,7 +202,7 @@ void Sorts::smart_merge_sort_for_memory(vector<Product> &vector1, int lo, int hi
 
 }
 
-void Sorts::sort_by_any_par(string &key, vector<Product> &vector1, int lo, int hi) {
+void Sorts::sort_by_any_par(const string &key, vector<Product> &vector1, int lo, int hi) {
 
     if(key == "u") {
         counting_sort_for_unit(vector1);
