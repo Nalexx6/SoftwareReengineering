@@ -7,6 +7,10 @@
 
 ProductsService Commands::productsService = ProductsService();
 
+Commands::Commands() {
+
+}
+
 void Commands::create_new_product() {
 
     cout << "Enter name\n";

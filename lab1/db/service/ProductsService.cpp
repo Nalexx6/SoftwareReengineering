@@ -90,7 +90,6 @@ void ProductsService::print_all_data_from_file() {
 
 void ProductsService::print_all_data_from_vector(const string& op) {
     vector<Product> vector1 = getVector(op);
-    cout<<"Print: "<<vector1.size()<<"\n";
 
     cout<<"idV\tid\tName\tUnit\tQuantity\tDate\tTime\tExpiry period\n";
 
@@ -109,8 +108,6 @@ void ProductsService::print_all_data_from_vector(const string& op) {
 void ProductsService::load_all_products_from_file(const string& op){
     vector<Product> vector1 = getVector(op);
 
-    cout<<"Load: "<<vector1.size()<<"\n";
-
     ifstream f("../files/Products.txt");
     string name, unit;
     int i = 0, id, quant, day, month, year, hours, mins, secs, exp_per;
@@ -122,7 +119,6 @@ void ProductsService::load_all_products_from_file(const string& op){
             f >> id >> name >> unit >> quant >> day >> month >> year >> hours >> mins >> secs >> exp_per;
 
             if (find_exact_pos_in_vector(vector1, id) != -1) {
-                cout<<"Load iter: "<<vector1.size()<<"\n";
                 i++;
                 vector1.insert(vector1.begin() + find_exact_pos_in_vector(vector1, id),
                         Product(id, name, unit, quant, day, month, year, hours, mins, secs, exp_per, true));
@@ -133,9 +129,7 @@ void ProductsService::load_all_products_from_file(const string& op){
     }
 
     updateVector(op, vector1);
-
     f.close();
-
     cout<< "All " << i << " unloaded products loaded to memory\n";
 
 }
@@ -299,13 +293,9 @@ void ProductsService::create_N_random_products_and_append_them_to_memory(int &N)
                 Day, Month, Year, Hours, Mins, Seconds, Exp_per, false);
 
         store.push_back(*product);
-        cout << store.size();
-
 
     }
     cout<<"\nAll " << N << " random products successfully created\n";
-    print_all_data_from_vector("store");
-
 }
 
 void ProductsService::delete_all_products_from_files() {

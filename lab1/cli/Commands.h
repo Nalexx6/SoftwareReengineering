@@ -6,20 +6,34 @@
 #define LAB_1_DATA_BASE_IN_FILES__COMMANDS_H
 
 
-#include "../../db/models/Product.h"
-#include "../../db/service/ProductsService.h"
+#include "../db/models/Product.h"
+#include "../db/service/ProductsService.h"
 //3b Lab
-#include "../../utils/Sorts.h"
+#include "../utils/Sorts.h"
 
 class Commands {
 
 private:
 
-public:
+    unordered_map <int, function<void()>> commands_mapping = {
+            {1, Commands::create_new_product},
+            {2, Commands::save_all_products_from_memory_to_file},
+            {3, Commands::print_all_data_from_vector},
+            {4, Commands::print_all_data_from_file},
+            {5, Commands::print_all_data_from_binary_file},
+            {6, Commands::load_all_products_from_file},
+            {7, Commands::load_all_products_from_binary_file},
+            {8, Commands::create_N_random_products_and_append_them_to_memory},
+            {9, Commands::delete_all_products_from_memory},
+            {10, Commands::delete_all_products_from_files},
+            {11, Commands::delete_certain_product},
+            {12, Commands::update_certain_product},
+            {13, Commands::search_interactive},
+            {14, Commands::sort_interactive},
+    };
+
     ProductsService static productsService;
 
-
-    Commands();
 
     //data operations
     void static create_new_product();
@@ -54,6 +68,12 @@ public:
     void static sort_demo(string& key_1, string& key_2);
     clock_t static sort_benchmark(string& key);
 
+public:
+    Commands();
+
+    void interactive();
+    void demo();
+    void benchmark();
 };
 
 

@@ -2,9 +2,9 @@
 // Created by Win10Pro on 04.02.2020.
 //
 
-#include "Mode.h"
+#include "Commands.h"
 
-void Mode::interactive() {
+void Commands::interactive() {
 
     char response = 'y';
 
@@ -36,7 +36,7 @@ void Mode::interactive() {
 
 }
 
-void Mode::demo() {
+void Commands::demo() {
 
     /*create random - save to files - print all from files - save to show no duplicates -
      * delete all from memory - print -load from txt - print - delete all from memory - load from bin - print
@@ -189,7 +189,7 @@ void Mode::demo() {
 
 }
 
-void Mode::benchmark() {
+void Commands::benchmark() {
 
     ifstream f("../files/Benchmark default parameters.txt");
     string name, count_sort_key, radix_sort_key, sort_key_1, sort_key_2;
