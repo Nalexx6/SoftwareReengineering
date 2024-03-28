@@ -61,7 +61,6 @@ public:
     int getExpiryPeriod() const;
     void setExpiryPeriod(int expiryPeriod);
     int getId() const;
-    void setId(int id);
     bool isBeenSaved() const;
     void setBeenSaved(bool beenSaved);
 

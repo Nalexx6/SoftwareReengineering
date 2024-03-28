@@ -177,10 +177,6 @@ int Product::getId() const {
     return Id;
 }
 
-void Product::setId(int id) {
-    Id = id;
-}
-
 bool Product::isBeenSaved() const {
     return Been_saved;
 }
