@@ -13,14 +13,25 @@ vector<Product> ProductsService::getVector(const string &op){
 
     if (op == "store")
         return store;
-    else if (op == "delete")
-        return for_delete_update;
-    else if (op == "update")
+    else if (op == "delete" || op == "update")
         return for_delete_update;
     else if (op == "search")
         return searched_1;
     else
         return for_sort;
+}
+
+
+void ProductsService::updateVector(const string &op, const vector<Product> &vector1){
+
+    if (op == "store")
+        store = vector1;
+    else if (op == "delete" || op == "update")
+        for_delete_update = vector1;
+    else if (op == "search")
+        searched_1 = vector1;
+    else
+        for_sort = vector1;
 }
 
 void ProductsService::create_new_product(Product *product) {
@@ -79,6 +90,7 @@ void ProductsService::print_all_data_from_file() {
 
 void ProductsService::print_all_data_from_vector(const string& op) {
     vector<Product> vector1 = getVector(op);
+    cout<<"Print: "<<vector1.size()<<"\n";
 
     cout<<"idV\tid\tName\tUnit\tQuantity\tDate\tTime\tExpiry period\n";
 
@@ -97,6 +109,8 @@ void ProductsService::print_all_data_from_vector(const string& op) {
 void ProductsService::load_all_products_from_file(const string& op){
     vector<Product> vector1 = getVector(op);
 
+    cout<<"Load: "<<vector1.size()<<"\n";
+
     ifstream f("../files/Products.txt");
     string name, unit;
     int i = 0, id, quant, day, month, year, hours, mins, secs, exp_per;
@@ -108,7 +122,7 @@ void ProductsService::load_all_products_from_file(const string& op){
             f >> id >> name >> unit >> quant >> day >> month >> year >> hours >> mins >> secs >> exp_per;
 
             if (find_exact_pos_in_vector(vector1, id) != -1) {
-
+                cout<<"Load iter: "<<vector1.size()<<"\n";
                 i++;
                 vector1.insert(vector1.begin() + find_exact_pos_in_vector(vector1, id),
                         Product(id, name, unit, quant, day, month, year, hours, mins, secs, exp_per, true));
@@ -117,6 +131,8 @@ void ProductsService::load_all_products_from_file(const string& op){
         }
 
     }
+
+    updateVector(op, vector1);
 
     f.close();
 
@@ -177,6 +193,8 @@ void ProductsService::load_all_products_from_binary_file(const string& op) {
         }
     }
     f.close();
+
+    updateVector(op, vector1);
 
     cout<< "All " << i << " unloaded products loaded to memory\n";
 
@@ -568,6 +586,7 @@ void ProductsService::update_certain_product_from_memory(char &source, const str
         store[idv_1].Expiry_period = vector1[idv].Expiry_period;
 
     }
+
     cout << "Product successfully updated\n";
 
 }

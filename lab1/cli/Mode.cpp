@@ -68,7 +68,7 @@ void Mode::demo() {
           "cin anything to continue\n";
     cin>>cont;
     Commands::productsService.save_all_products_from_memory_to_file("store");
-    cout<<"Now we will print all data from txt and binary file to be sure that save Commands::productsService is correct, "
+    cout<<"Now we will print all data from txt and binary file to be sure that save function is correct, "
           "cin anything to continue\n ";
     cin>>cont;
     Commands::productsService.print_all_data_from_file();

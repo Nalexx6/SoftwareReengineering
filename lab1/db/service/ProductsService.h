@@ -21,6 +21,7 @@ private:
     };
 
     vector<Product> getVector(const string &op);
+    void updateVector(const string &op, const vector<Product>& vector1);
 
     //Memory
     vector <Product> store = {};
